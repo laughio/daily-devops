@@ -1,0 +1,48 @@
+name: "Rust"
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: cargo test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - run: cargo test --all-features
+        id: test
+      - name: Send a stream message
+        uses: zulip/github-actions-zulip/send-message@v1
+        with:
+          api-key: ${{ secrets.ZULIP_API_KEY }}
+          email: "devops-bot@openllama.zulipchat.com"
+          organization-url: "https://openllama.zulipchat.com"
+          to: "general"
+          type: "stream"
+          topic: "devops"
+          content: "✨[${{github.action_repository}}(${{github.head_ref}} → ${{github.base_ref}})](${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}) [test] : ${{ steps.test.outcome }}"
+
+  # Check formatting with rustfmt
+  formatting:
+    name: cargo fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Ensure rustfmt is installed and setup problem matcher
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: rustfmt
+      - name: Rustfmt Check
+        uses: actions-rust-lang/rustfmt@v1
+        id: rustfmt
+      - name: Send a stream message
+        uses: zulip/github-actions-zulip/send-message@v1
+        with:
+          api-key: ${{ secrets.ZULIP_API_KEY }}
+          email: "devops-bot@openllama.zulipchat.com"
+          organization-url: "https://openllama.zulipchat.com"
+          to: "general"
+          type: "stream"
+          topic: "devops"
+          content: "✨[${{github.action_repository}}(${{github.head_ref}} → ${{github.base_ref}})](${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}) [rustfmt] : ${{ steps.rustfmt.outcome }}"
