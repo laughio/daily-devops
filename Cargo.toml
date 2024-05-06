@@ -3,7 +3,15 @@ name = "daily-devops"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "devops"
+path = "src/devops/main.rs"
+
+[[bin]]
+name = "sort"
+path = "src/sort/main.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-iced = "0.12.1"
+#iced = "0.12.1"
