@@ -12,6 +12,7 @@ fn main() {
     match r {
       Ok(l) => if l > 0 {
         let mut pisces: Vec<String> = vec![];
+        buffer = buffer.replace("\r\n", "").replace("\n", "");
         let parts = buffer.split(sep);
         parts.for_each(|p| { pisces.push(p.parse().unwrap()); });
         pisces.sort();
